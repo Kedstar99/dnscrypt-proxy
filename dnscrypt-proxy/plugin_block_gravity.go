@@ -16,7 +16,7 @@ import (
 )
 
 type PluginBlockGravity struct {
-
+	db *sql.DB
 }
 
 func (plugin *PluginBlockGravity) Name() string {
@@ -32,6 +32,7 @@ func (plugin *PluginBlockGravity) Init(proxy *Proxy) error {
 	if err != nil {
 		return err
 	}
+	plugin.gravityDatabase = gravityDatabase
 	defer gravityDatabase.Close()
 	return nil
 }
@@ -45,5 +46,15 @@ func (plugin *PluginBlockGravity) Reload() error {
 }
 
 func (plugin *PluginBlockName) Eval(pluginsState *PluginsState, msg *dns.Msg) error {
+	if blockedNames == nil || pluginsState.sessionData["whitelisted"] != nil {
+		return nil
+	}
+	sqlAdListSearch := `SELECT domain FROM gravity WHERE domain == ?`
+	statement, err := plugin.db.Query(sqlAdListSearch)
+	if err != nil {
+		//TODO handle error
+		
+	}
+	_, err := blockedNames.check(pluginsState, pluginsState.qName, nil)
 	return err
 }

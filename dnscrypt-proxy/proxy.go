@@ -60,6 +60,7 @@ type Proxy struct {
 	whitelistNameFile              string
 	blockNameLogFile               string
 	whitelistNameLogFile           string
+	gravityDBLocation              string
 	blockNameFormat                string
 	whitelistNameFormat            string
 	blockIPFile                    string
